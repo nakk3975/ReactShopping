@@ -30,8 +30,8 @@ function Detail(props) {
 
     let [time, setTime] = useState(true);
     let [timer, setTimer] = useState(2);
-    let [count, setCount] = useState(0);
     let [text, setText] = useState("");
+    let [showWarning, setShowWarning] = useState(false);
     // useEffect 안에 있는 코드는 html 랜더링 후에 동작
     useEffect(() => {
         // mount, update 작동
@@ -49,8 +49,10 @@ function Detail(props) {
     }, []) 
     
     useEffect(() => {
-        if(isNaN(text) == true) {
-            alert("숫자만 입력하세요");
+        if(isNaN(text)) {
+            setShowWarning(true);
+        } else {
+            setShowWarning(false);
         }
     }, [text])
     
@@ -96,6 +98,7 @@ function Detail(props) {
                 </div>
                 <div className="col-md-6">
                     <input type="text" onChange={(e) => { setText(e.target.value) }}></input>
+                    {showWarning && <h6 className="text-danger" aria-disabled>숫자만 입력하세요</h6>}
                     <h4 className="pt-5">{goods.title}</h4>
                     <p>{goods.content}</p>
                     <p>{goods.price}원</p>
