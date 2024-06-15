@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Nav from 'react-bootstrap/Nav';
+
 // import styled from 'styled-components';
 
 // let BlueButton = styled.button`
@@ -69,12 +71,22 @@ function Detail(props) {
     // 4. useEffect 실행 전에 뭔가 실행 하려면 언제나 return () => {}
     // useEffect(() => {  }, [count]) 5. 특정 state 변경시에만 실행하려면 [state명]
 
-    
-
     let {id} = useParams();
     let goods = props.shoes.find((x) => {return x.id == id});
+    let [tab, setTab] = useState(0);
+    let [a, setA] = useState('');
+
+    useEffect (() => {
+        let end = setTimeout(() => {setA('a-end')}, 100)
+
+        return () => {
+            clearTimeout(end);
+            setA('');
+        }
+    }, [])
+
     return(
-        <div className="container">
+        <div className={"container a-start " + a}>
             {
                 time == false ? 
                 null : 
@@ -97,16 +109,58 @@ function Detail(props) {
                     <img src={"https://codingapple1.github.io/shop/shoes" + (Number(goods.id) + 1) + ".jpg"} width="100%" />
                 </div>
                 <div className="col-md-6">
-                    <input type="text" onChange={(e) => { setText(e.target.value) }}></input>
-                    {showWarning && <h6 className="text-danger" aria-disabled>숫자만 입력하세요</h6>}
+                    {/* <input type="text" onChange={(e) => { setText(e.target.value) }}></input>
+                    {showWarning && <h6 className="text-danger" aria-disabled>숫자만 입력하세요</h6>} */}
                     <h4 className="pt-5">{goods.title}</h4>
                     <p>{goods.content}</p>
                     <p>{goods.price}원</p>
                     <button className="btn btn-danger">주문하기</button> 
                 </div>
             </div>
+
+            <Nav variant="tabs" defaultActiveKey="link-0">
+                <Nav.Item>
+                    <Nav.Link eventKey="link-0" onClick={(() => {setTab(0)})}>버튼1</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-1" onClick={(() => {setTab(1)})}>버튼2</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-2" onClick={(() => {setTab(2)})}>버튼3</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            {/* {tab == 0 && <div>내용0</div>}
+            {tab == 1 && <div>내용1</div>}
+            {tab == 2 && <div>내용2</div>} */}
+            <TabContent tab={tab}/>
         </div> 
     )
 }
 
+function TabContent({tab}) {
+    // if(tab == 0) {
+    //     return <div>내용0</div>
+    // } else if(tab == 1) {
+    //     return <div>내용1</div>
+    // } else if(tab == 2) {
+    //     return <div>내용2</div>
+    // } else {
+    //     return <div>존재하지 않는 페이지 입니다.</div>
+    // }
+
+    let [fade, setFade] = useState('');
+
+    useEffect(() => {
+        let a = setTimeout(() => { setFade('end') },100)
+        return () => {
+            clearTimeout(a);
+            setFade('')
+        }
+    }, [tab])
+    
+    return <div className={"start " + fade}>    {/*{`start ${fade}`}*/}
+        {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
+    </div>
+}
+    
 export default Detail;

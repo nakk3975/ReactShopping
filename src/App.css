@@ -5,6 +5,24 @@
   background-position: center;
 }
 
+.start {
+  opacity: 0;
+}
+
+.end {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.a-start {
+  opacity: 0;
+}
+
+.a-end {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
 .shoeses{
   text-decoration: none;
 }
