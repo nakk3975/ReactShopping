@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, {useContext, useEffect, useState } from "react";
 import Nav from 'react-bootstrap/Nav';
+import { useParams } from "react-router-dom";
+import { Context1 } from '../App.js';
 
 // import styled from 'styled-components';
 
@@ -149,6 +150,7 @@ function TabContent({tab}) {
     // }
 
     let [fade, setFade] = useState('');
+    let {inventory} = useContext(Context1);
 
     useEffect(() => {
         let a = setTimeout(() => { setFade('end') },100)
@@ -158,8 +160,15 @@ function TabContent({tab}) {
         }
     }, [tab])
     
+    // 1. Context API (리액트 기본 문법)
+    //   - props 전송 없이 state 공유 가능
+    //   - 단점 : 성능 이슈, 재활용이 어렵다
+    //   - Context API 가 변경되면 안 쓰는 다른 변수, 자식들도 무조건 재 랜더링
+    //   - 다른 페이지에서 컴포넌트를 부르면 꼬인다.
+    // 2. Redux 등 외부 라이브러리 사용
+
     return <div className={"start " + fade}>    {/*{`start ${fade}`}*/}
-        {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
+        {[<div>{inventory}</div>, <div>내용1</div>, <div>내용2</div>][tab]}
     </div>
 }
     

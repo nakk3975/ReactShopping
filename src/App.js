@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import Container from 'react-bootstrap/Container';
+import { createContext, useState } from 'react';
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import data from './data.js';
@@ -8,10 +8,14 @@ import About from './routes/About.js';
 import Detail from './routes/Detail.js';
 import Event from './routes/Event.js';
 import Main from './routes/Main.js';
+import Cart from './routes/Cart.js';
+
+export let Context1 = createContext();
 
 function App() {
 
   let [shoes, setShoes] = useState(data); 
+  let [inventory, setInventory] = useState([10, 11, 12]);
   let navigate = useNavigate();
 
   return (
@@ -43,7 +47,12 @@ function App() {
       {/* <Link to="/">홈</Link> */}
       <Routes>
         <Route path="/" element={<Main shoes={shoes} setShoes={setShoes}/>} />
-        <Route path={"/detail/:id"} element={<Detail shoes={shoes}/>} />
+        <Route path={"/detail/:id"} element={
+          <Context1.Provider value={{inventory, shoes}}>
+            <Detail shoes={shoes}/>
+          </Context1.Provider>} />
+
+        <Route path="/cart" element={<Cart/>} />
         {/* 
         nested routes 라고 함
         장점1. route 작성이 약간 간단해짐
