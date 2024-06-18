@@ -2,6 +2,9 @@ import React, {useContext, useEffect, useState } from "react";
 import Nav from 'react-bootstrap/Nav';
 import { useParams } from "react-router-dom";
 import { Context1 } from '../App.js';
+import { addItem } from "../store/stockSlice.js";
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import styled from 'styled-components';
 
@@ -86,6 +89,9 @@ function Detail(props) {
         }
     }, [])
 
+    let state = useSelector((state) => state);
+    let dispatch = useDispatch();
+
     return(
         <div className={"container a-start " + a}>
             {
@@ -115,7 +121,9 @@ function Detail(props) {
                     <h4 className="pt-5">{goods.title}</h4>
                     <p>{goods.content}</p>
                     <p>{goods.price}원</p>
-                    <button className="btn btn-danger">주문하기</button> 
+                    <Link to={"/cart"}>
+                        <button className="btn btn-danger" onClick={() => {dispatch(addItem({id : goods.id, name : goods.title, count : 1}))}}>주문하기</button> 
+                    </Link>
                 </div>
             </div>
 
