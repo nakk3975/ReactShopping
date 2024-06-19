@@ -82,11 +82,21 @@ function Detail(props) {
 
     useEffect (() => {
         let end = setTimeout(() => {setA('a-end')}, 100)
-
         return () => {
             clearTimeout(end);
             setA('');
         }
+    }, [])
+
+    
+
+    useEffect(() => {
+        let 꺼낸거 = localStorage.getItem('watched');
+        꺼낸거 = JSON.parse(꺼낸거);
+        꺼낸거.push(goods.id);
+        꺼낸거 = new Set(꺼낸거);
+        꺼낸거 = Array.from(꺼낸거);
+        localStorage.setItem('watched', JSON.stringify(꺼낸거));
     }, [])
 
     let state = useSelector((state) => state);

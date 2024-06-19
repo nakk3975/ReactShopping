@@ -1,11 +1,18 @@
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { Table } from 'react-bootstrap';
 import Card from './Card.js';
-import { useState } from 'react';
 
 function Main(props) {
 
     let [page, setPage] = useState(2);
     let [loading, setLoading] = useState(false);
+    // let [recently, setRecently] = useState([]);
+    // 컴포넌트가 마운트될 때 localStorage에서 데이터를 가져옴
+    // useEffect(() => {
+    //     let savedProducts = JSON.parse(localStorage.getItem('watched')) || [];
+    //     setRecently(savedProducts);
+    // }, []);
     
     return (
         <>
@@ -14,6 +21,25 @@ function Main(props) {
             {/* public 폴더 img 저장시 /img.png로 불러 올 수 있음 */}
             {/* src={process.env.PUBLIC_URL + '/img/logo.png'} */}
             {/* 이게 public 폴더 이미지 쓰는 권장 방식 */}
+            {/* <div>
+                <h5>최근 본 상품</h5>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>이름</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {recently.map((product, i) =>
+                        <tr key={i}>
+                            <td>{product.id}</td>
+                            <td>{product.name}</td>
+                        </tr>
+                    )}
+                    </tbody>
+                </Table>
+            </div> */}
             <div className="container">
                 <div className="row">
                 {props.shoes.map(function (a, i) {
@@ -22,7 +48,7 @@ function Main(props) {
                 </div>
             </div>
 
-            {page < 4 && <button onClick={() => {setLoading(true);
+            {page < 4 && <button className='btn btn-primary' onClick={() => {setLoading(true);
                 axios.get('https://codingapple1.github.io/shop/data' + page + '.json')
                 .then(( response ) => {
                     let copy = [...props.shoes];

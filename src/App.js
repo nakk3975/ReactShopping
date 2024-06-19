@@ -1,7 +1,7 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, json, useNavigate } from 'react-router-dom';
 import './App.css';
 import data from './data.js';
 import About from './routes/About.js';
@@ -14,9 +14,19 @@ export let Context1 = createContext();
 
 function App() {
 
+  // let obj = {name : 'kim'};
+  // localStorage.setItem('data', JSON.stringify(obj));
+  // let 꺼낸거 = localStorage.getItem('data');
+  // console.log(JSON.parse(꺼낸거).name);
   let [shoes, setShoes] = useState(data); 
   let [inventory, setInventory] = useState([10, 11, 12]);
   let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('watched')) {
+      localStorage.setItem('watched', JSON.stringify([]));
+    }
+  }, [])
 
   return (
     <div className="App">
