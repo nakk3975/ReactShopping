@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, lazy, Suspense } from 'react';
+import { createContext, useEffect, useState, lazy, Suspense, useTransition, useDeferredValue } from 'react';
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -23,6 +23,11 @@ export let Context1 = createContext();
 
 function App() {
 
+  // 1. batch 기능
+  // state 변경이 여러번 있을 경우 마지막에만 재렌더링 (리액트 17 까지는 예외 - ajax, setTimeout 내부)
+  // 2. useTransition
+  // 느린 컴포넌트 성능 향상 가능
+
   // let obj = {name : 'kim'};
   // localStorage.setItem('data', JSON.stringify(obj));
   // let 꺼낸거 = localStorage.getItem('data');
@@ -30,6 +35,13 @@ function App() {
   let [shoes, setShoes] = useState(data); 
   let [inventory, setInventory] = useState([10, 11, 12]);
   let navigate = useNavigate();
+
+  let [name, setName] = useState('');
+  let a = new Array(10000).fill(0);
+  // startTransition로 문제의 state 변경 감싸기
+  let [isPending, startTransition] = useTransition();
+  // let [처리중?, 늦게처리] = useTransition();
+  // let state = useDeferredValue(state); 괄호 안에 있는 state를 늦게 처리 useTransition과 같은 역할
 
   useEffect(() => {
     if (!localStorage.getItem('watched')) {
@@ -82,6 +94,23 @@ function App() {
             { result.data && result.data.name }
             { result.error && "에러남" }
           </Nav>
+          
+          <input onChange={(e) => { 
+            startTransition(() => { // startTransition 동작원리
+                                    // 브라우저는 single-threaded라서 1번에 1개의 작업만 할 수 있음
+                                    // startTransition을 쓰면 안에 있는 코드의 시작시간을 늦춰줌
+              setName(e.target.value);
+            })
+          }} />
+          {
+            // 테스트를 위해 고의적인 성능저하
+            // 솔루션 1. html 10000개 지우기
+            // 솔루션 2. useTransition 쓰기
+            isPending ? '로딩중' : 
+            a.map(() => {
+              return <div>{name}</div>
+            })
+          }
         </Container>
       </Navbar>
 
