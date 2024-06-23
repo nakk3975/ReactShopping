@@ -1,16 +1,23 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, lazy, Suspense } from 'react';
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import data from './data.js';
 import About from './routes/About.js';
-import Cart from './routes/Cart.js';
-import Detail from './routes/Detail.js';
-import Event from './routes/Event.js';
-import Main from './routes/Main.js';
+// import Cart from './routes/Cart.js';
+// import Detail from './routes/Detail.js';
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import Event from './routes/Event.js';
+import Main from './routes/Main.js';
+
+// 바로 import 하지말고 필요할때 import
+const Detail = lazy(() => import('./routes/Detail.js'));
+const Cart = lazy(() => import('./routes/Cart.js'));
+// 장점 : 불필요 할 때 로딩을 안 하므로 처음 로딩시간이 짧아짐
+// 단점 : 저 파일들을 사용할 때 컴포넌트 로딩시간 발생
+// Suspense로 로딩시 로딩중이라 알림
 
 export let Context1 = createContext();
 
@@ -85,33 +92,35 @@ function App() {
       - prefetch? */}
 
       {/* <Link to="/">홈</Link> */}
-      <Routes>
-        <Route path="/" element={<Main shoes={shoes} setShoes={setShoes}/>} />
-        <Route path={"/detail/:id"} element={
-          <Context1.Provider value={{inventory, shoes}}>
-            <Detail shoes={shoes}/>
-          </Context1.Provider>} />
+      <Suspense fallback={<div>로딩중</div>}>
+        <Routes>
+          <Route path="/" element={<Main shoes={shoes} setShoes={setShoes}/>} />
+          <Route path={"/detail/:id"} element={
+            <Context1.Provider value={{inventory, shoes}}>
+                <Detail shoes={shoes}/>  
+            </Context1.Provider>} />
 
-        <Route path="/cart" element={<Cart/>} />
-        {/* 
-        nested routes 라고 함
-        장점1. route 작성이 약간 간단해짐
-        장점2. nested route 접속시엔 element 2개가 보임
-         */}
-        <Route path="/about" element={<About/>} >
-          <Route path="member" element={<div>멤버임</div>}/>
-          <Route path="location" element={<div>위치정보임</div>} />
-        </Route>
-        <Route path="/event" element={<Event/>} >
-          <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
-          <Route path="two" element={<div>생일기념 쿠폰 받기</div>} />
-        </Route>
-        {/* 위랑 동일 코드
-        <Route path="/about/member" element={<About/>} />
-        <Route path="/about/location" element={<About/>} /> */}
-        {/* 404에러 페이지
-        <Route path="*" element={<div>없는 페이지 입니다</div>} /> */}
-      </Routes>
+          <Route path="/cart" element={<Cart/>} />
+          {/* 
+          nested routes 라고 함
+          장점1. route 작성이 약간 간단해짐
+          장점2. nested route 접속시엔 element 2개가 보임
+          */}
+          <Route path="/about" element={<About/>} >
+            <Route path="member" element={<div>멤버임</div>}/>
+            <Route path="location" element={<div>위치정보임</div>} />
+          </Route>
+          <Route path="/event" element={<Event/>} >
+            <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
+            <Route path="two" element={<div>생일기념 쿠폰 받기</div>} />
+          </Route>
+          {/* 위랑 동일 코드
+          <Route path="/about/member" element={<About/>} />
+          <Route path="/about/location" element={<About/>} /> */}
+          {/* 404에러 페이지
+          <Route path="*" element={<div>없는 페이지 입니다</div>} /> */}
+        </Routes>
+      </Suspense>
     </div>
   );
 }
