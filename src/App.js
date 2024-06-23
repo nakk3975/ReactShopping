@@ -5,16 +5,16 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import data from './data.js';
 import About from './routes/About.js';
-// import Cart from './routes/Cart.js';
-// import Detail from './routes/Detail.js';
+import Cart from './routes/Cart.js';
+import Detail from './routes/Detail.js';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import Event from './routes/Event.js';
 import Main from './routes/Main.js';
 
 // 바로 import 하지말고 필요할때 import
-const Detail = lazy(() => import('./routes/Detail.js'));
-const Cart = lazy(() => import('./routes/Cart.js'));
+// const Detail = lazy(() => import('./routes/Detail.js'));
+// const Cart = lazy(() => import('./routes/Cart.js'));
 // 장점 : 불필요 할 때 로딩을 안 하므로 처음 로딩시간이 짧아짐
 // 단점 : 저 파일들을 사용할 때 컴포넌트 로딩시간 발생
 // Suspense로 로딩시 로딩중이라 알림
@@ -39,7 +39,7 @@ function App() {
   let [name, setName] = useState('');
   let a = new Array(10000).fill(0);
   // startTransition로 문제의 state 변경 감싸기
-  let [isPending, startTransition] = useTransition();
+  // let [isPending, startTransition] = useTransition();
   // let [처리중?, 늦게처리] = useTransition();
   // let state = useDeferredValue(state); 괄호 안에 있는 state를 늦게 처리 useTransition과 같은 역할
 
@@ -95,7 +95,7 @@ function App() {
             { result.error && "에러남" }
           </Nav>
           
-          <input onChange={(e) => { 
+          {/* <input onChange={(e) => { 
             startTransition(() => { // startTransition 동작원리
                                     // 브라우저는 single-threaded라서 1번에 1개의 작업만 할 수 있음
                                     // startTransition을 쓰면 안에 있는 코드의 시작시간을 늦춰줌
@@ -110,7 +110,7 @@ function App() {
             a.map(() => {
               return <div>{name}</div>
             })
-          }
+          } */}
         </Container>
       </Navbar>
 
